@@ -1,5 +1,6 @@
 {
     "conventionalCommits.scopes": [
-        "README.md"
+        "README.md",
+        "Mastery feature! huge."
     ]
 }
