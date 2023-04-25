@@ -1,6 +1,17 @@
 import './App.css';
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { championMapping } from './util/championMasteryMapper';
+
+
+function renderMasteryObject(masteryObject) {
+  return (
+    <div style={{backgroundColor: "pink", fontFamily: "Comic Sans MS"}} key={masteryObject.championId + masteryObject.championPoints + masteryObject.lastPlayTime}>
+           <p>Champion ID: {championMapping[masteryObject.championId]}</p>
+           <p>Points: {masteryObject.championPoints}</p>
+         </div>
+    )
+}
 
 
 function App() {
@@ -37,18 +48,8 @@ function App() {
       <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Default</button>
 
       <div>
-        {data && data.map((masteryObject) => {
-          return (
-            <div key={masteryObject.championId + masteryObject.championPoints + masteryObject.lastPlayTime } >
-              <p>Champion ID: {masteryObject.championId}</p>
-              <p>Champion Points: {masteryObject.championPoints}</p>
-            </div>
-          )
-        })}
+        {data && data.map((masteryObject) => renderMasteryObject(masteryObject))}
       </div>
-      
-
-
     </>
   );
 }
