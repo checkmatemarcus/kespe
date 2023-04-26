@@ -1,80 +1,13 @@
 import './App.css';
 import React from 'react';
-import axios from "axios"
 import { getSummonerMasteryByName } from './util/riotAPI';
 import { useEffect, useState } from "react"
-import { championMapping } from './util/championMasteryMapper';
+import { renderMasteryObject } from './components/ChampionMasteryComponent';
 
 import Tabs from './Tabs';
 
-
-//"text-center max-w-xs flex justify-center" style={{margin: "auto"}}
-function renderMasteryObject(el) {
-  return (
-    <div class="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700 m-4">
-      <div class="flex items-center justify-between mb-4">
-        <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">{championMapping[el.championId]}</h5>
-      </div>
-
-      <div class="flex flex-col items-center ">
-        <ul class="divide-y divide-gray-200 dark:divide-gray-700">
-          <li class="py-3 sm:py-4">
-            <div class="flex items-center space-x-4">
-              <div class="flex-shrink-0">
-
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                  Mastery
-                </p>
-              </div>
-              <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                {el.championPoints}
-              </div>
-            </div>
-          </li>
-
-          <li class="py-3 sm:py-4">
-            <div class="flex items-center space-x-4">
-              <div class="flex-shrink-0">
-
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                  Champion Level
-                </p>
-              </div>
-              <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                {el.championLevel}
-              </div>
-            </div>
-          </li>
-
-          <li class="py-3 sm:py-4">
-            <div class="flex items-center space-x-4">
-              <div class="flex-shrink-0">
-
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                  Last Played
-                </p>
-              </div>
-              <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                {new Date(el.lastPlayTime).toLocaleString()}
-              </div>
-            </div>
-          </li>
-
-
-        </ul>
-      </div>
-    </div>
-  )
-}
-
-
 function App() {
+  // Mastery states for each summoner in BPK team:
   const [kespejonesMastery, setKespeJonesMastery] = useState(null);
   const [dogcatMastery, setDogcatMastery] = useState(null);
   const [sindreMastery, setSindreMastery] = useState(null);
@@ -89,7 +22,6 @@ function App() {
     setModaMastery(await getSummonerMasteryByName("BPK Modalitsu"))
     setBalagurbizMastery(await getSummonerMasteryByName("BPK Balagurbiz"))
   }
-
 
   useEffect(() => {
     fetchDataAndSetToState()
@@ -126,21 +58,22 @@ function App() {
 
         {/* BALAGARBAGE */}
         <div label="Balagorbies">
-          <p class="text-center max-w-xs flex justify-center" style={{ margin: "auto" }}>ja, kanskje du skulle ha tatt ein bug i før du ganka top lane?</p>
+          <p class="text-center max-w-xs flex justify-center" style={{ margin: "auto" }}>"faen, de banna Kaisa"</p>
+          <div style={{maxHeight: "200px"}}>
           {balagurbizMastery && balagurbizMastery.map((masteryObject) => renderMasteryObject(masteryObject))}
+          </div>
         </div>
 
 
         {/* Modamoda */}
         <div label="Modamoda">
-          <p class="text-center max-w-xs flex justify-center" style={{ margin: "auto" }}>ja, kanskje du skulle ha tatt ein bug i før du ganka top lane?</p>
+          <p class="text-center max-w-xs flex justify-center" style={{ margin: "auto" }}>Best support EU</p>
           {modaMastery && modaMastery.map((masteryObject) => renderMasteryObject(masteryObject))}
         </div>
 
-        {/* Modamoda */}
+        {/* Sindre */}
         <div label="HAHAHAHAH">
-          <p>Belveth support OP</p>
-          <p class="text-center max-w-xs flex justify-center" style={{ margin: "auto" }}>ja, kanskje du skulle ha tatt ein bug i før du ganka top lane?</p>
+          <p class="text-center max-w-xs flex justify-center" style={{ margin: "auto" }}>"har me jungler egentlig?"</p>
           {sindreMastery && sindreMastery.map((masteryObject) => renderMasteryObject(masteryObject))}
         </div>
 
