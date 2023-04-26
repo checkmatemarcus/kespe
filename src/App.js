@@ -80,9 +80,8 @@ function App() {
   const [dataHAHA, setDataHAHA] = useState(null);*/
   
 
-  // Mastery State
-  const [summonerName, setSummonerName] = useState(""); // The summoner name entered by the user.
-  const [region, setRegion] = useState("euw1"); // The region selected by the user.
+  const getSummonerMasteries = (accountId) => {
+    let response;
 
     axios.get(`https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${accountId}?api_key=RGAPI-a6e7e611-b5ed-41b4-84d2-18029e28e0d0`, {
     }).then((res) => {
