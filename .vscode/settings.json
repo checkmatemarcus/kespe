@@ -1,6 +1,7 @@
 {
     "conventionalCommits.scopes": [
         "README.md",
-        "Mastery feature! huge."
+        "Mastery feature! huge.",
+        "App.js"
     ]
 }
