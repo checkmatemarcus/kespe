@@ -4,7 +4,7 @@ Kespe.no is an app that checks the stats of a group of league of legends players
 
 ## Getting Started
 
-1. Clone the repository with `git@github.com:checkmatemarcus/kespe.git`
+1. Clone the repository with `git clone git@github.com:checkmatemarcus/kespe.git`
 2. Install the front-end dependancies `npm i`
 3. Install the back-end dependancies `cd backend && npm i`
 4. Run the express server `npm run start`
