@@ -1,5 +1,7 @@
 export const championMapping = {
     266: "Aatrox",
+    145: "Kai'Sa",
+    895: "Nilah",
     412: "Thresh",
     23: "Tryndamere",
     79: "Gragas",
