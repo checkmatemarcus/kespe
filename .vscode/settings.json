@@ -3,5 +3,7 @@
         "README.md",
         "Mastery feature! huge.",
         "App.js"
-    ]
+    ],
+    "conventionalCommits.emojiFormat": "emoji",
+    "editor.codeActionsOnSave": { "source.fixAll.eslint": true, }
 }
