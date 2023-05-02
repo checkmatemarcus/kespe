@@ -2,8 +2,18 @@
     "conventionalCommits.scopes": [
         "README.md",
         "Mastery feature! huge.",
-        "App.js"
+        "App.js",
+        "index.js"
     ],
     "conventionalCommits.emojiFormat": "emoji",
-    "editor.codeActionsOnSave": { "source.fixAll.eslint": true, }
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "workbench.colorTheme": "Webstorm IntelliJ Darcula Theme",
+    "editor.formatOnSave": true,
+    "eslint.format.enable": true,
+    "eslint.validate": [
+        "json",
+        "javascript"
+    ],
 }

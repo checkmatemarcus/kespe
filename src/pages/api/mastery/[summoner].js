@@ -1,39 +1,31 @@
-import axios from "axios"
-
-// Create a new axios instance for communicating with the Riot API.
-const riotAPI = axios.create({
-  baseURL: "https://euw1.api.riotgames.com/lol",
-  headers: {"X-Riot-Token": process.env.API_KEY}
-})
-
-const getSummonerInfoByName = async (summonerName) => {
-  // Get the summoner's account ID from their summoner name.
-  const response = await riotAPI.get(`/summoner/v4/summoners/by-name/${summonerName}`)
-  return response.data
-}
-
-const getSummonerMasteryByAccountId = async (accountId) => {
-  // Get the summoner's mastery data from their account ID.
-  const response = await riotAPI.get(`/champion-mastery/v4/champion-masteries/by-summoner/${accountId}`)
-  return response.data
-}
-
-// Exported functions to be used outside of this file:
-const getSummonerMasteryByName = async (summonerName) => {
-  // Get the summoner mastery data by name
-  const summonerInfo = await getSummonerInfoByName(summonerName)
-  const summonerMastery = await getSummonerMasteryByAccountId(summonerInfo.id)
-  return summonerMastery
-}
+import { getSummonerMasteryByName } from '../riotAPI'
 
 export default async function handler(req, res) {
-  const input = req.query.summonerName
+  const input = req.query.summoner
   let response;
+
   try {
-    response = await getSummonerMasteryByName(input)
+    // Fetch raw data from Riot API
+    const rawMasteryData = await getSummonerMasteryByName(input)
+
+    // Get the total mastery score in raw data
+    const totalMasteryScore = rawMasteryData.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue.championPoints
+    }, 0)
+
+    // Get the total champion levels in raw data
+    const totalChampionLevels = rawMasteryData.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue.championLevel
+    }, 0)
+
+    response = {
+      summonerName: input,
+      totalMasteryScore: totalMasteryScore,
+      totalChampionLevels: totalChampionLevels
+    }
   } catch (error) {
-    response = {...error.response.data, hint: `Riot API key expired ${process.env.API_KEY}`}
+    response = { ...error.response.data, hint: `Riot API key expired ${process.env.API_KEY}` }
   }
+
   res.status(200).json(response)
-  
 }
