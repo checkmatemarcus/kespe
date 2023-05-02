@@ -3,7 +3,7 @@ import axios from "axios"
 // Create a new axios instance for communicating with the Riot API.
 const riotAPI = axios.create({
   baseURL: "https://euw1.api.riotgames.com/lol",
-  headers: {"X-Riot-Token": process.env.API_KEY}
+  headers: { "X-Riot-Token": process.env.API_KEY }
 })
 
 const getSummonerInfoByName = async (summonerName) => {
@@ -32,8 +32,8 @@ export default async function handler(req, res) {
   try {
     response = await getSummonerMasteryByName(input)
   } catch (error) {
-    response = {...error.response.data, hint: `Riot API key expired ${process.env.API_KEY}`}
+    response = { ...error.response.data, hint: `Riot API key expired ${process.env.API_KEY}` }
   }
   res.status(200).json(response)
-  
+
 }
