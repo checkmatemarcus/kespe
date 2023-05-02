@@ -5,4 +5,5 @@
         "App.js"
     ],
     "conventionalCommits.emojiFormat": "emoji",
+    "editor.codeActionsOnSave": { "source.fixAll.eslint": true, }
 }
