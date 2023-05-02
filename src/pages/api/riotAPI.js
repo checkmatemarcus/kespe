@@ -25,3 +25,9 @@ export const getSummonerMasteryByName = async (summonerName) => {
     const summonerMastery = await getSummonerMasteryByAccountId(summonerInfo.id)
     return summonerMastery
 }
+
+export const getClashDates = async () => {
+    // Get the upcoming clash dates
+    const response = await riotAPI.get(`/clash/v1/tournaments`)
+    return response.data
+}
