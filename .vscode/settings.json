@@ -3,7 +3,9 @@
         "README.md",
         "Mastery feature! huge.",
         "App.js",
-        "index.js"
+        "index.js",
+        "NextClash.jsx",
+        "src\\components"
     ],
     "conventionalCommits.emojiFormat": "emoji",
     "editor.codeActionsOnSave": {
