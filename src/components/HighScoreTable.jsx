@@ -19,7 +19,9 @@ const sortByHighestScore = (scores) => {
 export default function HighScoreTable() {
     const [isLoading, setLoading] = useState(null);
     const [scores, setScores] = useState([]);
-    const cacheTime = 10 * 60 * 1000; // Cache and revalidate data every 10 minutes
+
+    // Cache and revalidate data every 10 minutes to prevent 429 errors
+    const cacheTime = 10 * 60 * 1000;
 
     useEffect(() => {
         setLoading(true)
