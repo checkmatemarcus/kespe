@@ -6,9 +6,12 @@ export default function NextClash() {
     const [isLoading, setLoading] = useState(null);
     const [nextClashDates, setNextClashDates] = useState([]);
 
+    // Cache and revalidate data every 15 minutes to prevent 429 errors
+    const cacheTime = 15 * 60 * 1000;
+
     useEffect(() => {
         setLoading(true)
-        fetch('/api/clash/clashDates')
+        fetch('/api/clash/clashDates', { next: { revalidate: cacheTime } })
             .then((res) => res.json())
             .then((data) => {
                 setNextClashDates(data.clashDates)
@@ -44,12 +47,12 @@ export default function NextClash() {
         return `${duration.days} dager, ${duration.hours} timer og ${duration.minutes} minutter til neste kamp! 🏆 `
     }
 
-    if (isLoading) return <h1 class="flex m-auto pt-20 self-center">Loading...</h1>
-    if (!nextClashDates[0]) return <h1>No data found</h1>
+    if (isLoading) return <h1 className="flex m-auto pt-20 self-center">Loading...</h1>
+    if (!nextClashDates) return <h1>No data found</h1>
 
     return (
         <Card>
-            <b class="2xl">Neste Clash ⚔️</b>
+            <b className="2xl">Neste Clash ⚔️</b>
             <p>{countdown(nextClashDates[0]?.schedule[0]?.startTime)}</p>
             <Button color="gray">
                 <a href="https://support-leagueoflegends.riotgames.com/hc/en-us/articles/360000951548-Clash-FAQ">Clash FAQ</a>
@@ -59,10 +62,10 @@ export default function NextClash() {
                     <Timeline.Point icon={HiCalendar} />
                     <Timeline.Content>
                         <Timeline.Title>
-                            {nextClashDates[0].nameKeySecondary.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}
+                            {nextClashDates[0]?.nameKeySecondary?.replace(/_/g, " ")?.replace(/\b\w/g, l => l?.toUpperCase())}
                         </Timeline.Title>
                         <Timeline.Body>
-                            {formatDate(nextClashDates[0].schedule[0].startTime)}
+                            {formatDate(nextClashDates[0]?.schedule[0]?.startTime)}
                             <br />
                             <br />
                         </Timeline.Body>
@@ -72,10 +75,10 @@ export default function NextClash() {
                     <Timeline.Point icon={HiCalendar} />
                     <Timeline.Content>
                         <Timeline.Title>
-                            {nextClashDates[1].nameKeySecondary.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}
+                            {nextClashDates[1]?.nameKeySecondary?.replace(/_/g, " ")?.replace(/\b\w/g, l => l?.toUpperCase())}
                         </Timeline.Title>
                         <Timeline.Body>
-                            {formatDate(nextClashDates[1].schedule[0].startTime)}
+                            {formatDate(nextClashDates[1]?.schedule[0]?.startTime)}
                         </Timeline.Body>
                     </Timeline.Content>
                 </Timeline.Item>

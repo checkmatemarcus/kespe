@@ -19,15 +19,16 @@ const sortByHighestScore = (scores) => {
 export default function HighScoreTable() {
     const [isLoading, setLoading] = useState(null);
     const [scores, setScores] = useState([]);
+    const cacheTime = 10 * 60 * 1000; // Cache and revalidate data every 10 minutes
 
     useEffect(() => {
         setLoading(true)
         Promise.all([
-            fetch('/api/mastery/BPK Modalitsu').then((res) => res.json()).catch((err) => console.log(err)),
-            fetch('/api/mastery/BPK boobdude').then((res) => res.json()).catch((err) => console.log(err)),
-            fetch('/api/mastery/BPK balagurbiz').then((res) => res.json()).catch((err) => console.log(err)),
-            fetch('/api/mastery/BPK DOGCAT').then((res) => res.json()).catch((err) => console.log(err)),
-            fetch('/api/mastery/BPK HAHAHHAHAHAH').then((res) => res.json()).catch((err) => console.log(err)),
+            fetch('/api/mastery/BPK Modalitsu', { next: { revalidate: cacheTime } }).then((res) => res.json()).catch((err) => console.log(err)),
+            fetch('/api/mastery/BPK boobdude', { next: { revalidate: cacheTime } }).then((res) => res.json()).catch((err) => console.log(err)),
+            fetch('/api/mastery/BPK balagurbiz', { next: { revalidate: cacheTime } }).then((res) => res.json()).catch((err) => console.log(err)),
+            fetch('/api/mastery/BPK DOGCAT', { next: { revalidate: cacheTime } }).then((res) => res.json()).catch((err) => console.log(err)),
+            fetch('/api/mastery/BPK HAHAHHAHAHAH', { next: { revalidate: cacheTime } }).then((res) => res.json()).catch((err) => console.log(err)),
         ]).then((results) => {
             const combinedData = results.flat()
             setScores(sortByHighestScore(combinedData))
@@ -35,7 +36,7 @@ export default function HighScoreTable() {
         })
     }, [])
 
-    if (isLoading) return <h1 class="flex m-auto pt-20 self-center">Loading...</h1>
+    if (isLoading) return <h1 className="flex m-auto pt-20 self-center">Loading...</h1>
     if (!scores) return <h1>No data found</h1>
 
 
