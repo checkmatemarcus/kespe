@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Table } from "flowbite-react";
 
 const sortByHighestScore = (scores) => {
     // sort the scores by highest totalMasteryScore
@@ -7,10 +8,10 @@ const sortByHighestScore = (scores) => {
     });
 
     // Prefix the summonerName with the highest scores with emojis.
-    scores[0].summonerName = "🥇 " + scores[0].summonerName;
-    scores[1].summonerName = "🥈 " + scores[1].summonerName;
-    scores[2].summonerName = "🥉 " + scores[2].summonerName;
-    scores[4].summonerName = "💩 " + scores[4].summonerName;
+    const rankEmojis = ["🥇", "🥈", "🥉", "🤡", "💩"]
+    scores.map((score, index) => {
+        score.summonerName = rankEmojis[index] + " " + score.summonerName;
+    });
 
     return scores
 }
@@ -22,11 +23,11 @@ export default function HighScoreTable() {
     useEffect(() => {
         setLoading(true)
         Promise.all([
-            fetch('/api/mastery/BPK Modalitsu').then((res) => res.json()),
-            fetch('/api/mastery/BPK boobdude').then((res) => res.json()),
-            fetch('/api/mastery/BPK balagurbiz').then((res) => res.json()),
-            fetch('/api/mastery/BPK DOGCAT').then((res) => res.json()),
-            fetch('/api/mastery/BPK HAHAHHAHAHAH').then((res) => res.json()),
+            fetch('/api/mastery/BPK Modalitsu').then((res) => res.json()).catch((err) => console.log(err)),
+            fetch('/api/mastery/BPK boobdude').then((res) => res.json()).catch((err) => console.log(err)),
+            fetch('/api/mastery/BPK balagurbiz').then((res) => res.json()).catch((err) => console.log(err)),
+            fetch('/api/mastery/BPK DOGCAT').then((res) => res.json()).catch((err) => console.log(err)),
+            fetch('/api/mastery/BPK HAHAHHAHAHAH').then((res) => res.json()).catch((err) => console.log(err)),
         ]).then((results) => {
             const combinedData = results.flat()
             setScores(sortByHighestScore(combinedData))
@@ -43,18 +44,17 @@ export default function HighScoreTable() {
 
             const { summonerName, totalMasteryScore, totalChampionLevels } = score;
             return (
-                <tr key={index} class="bg-white dark:bg-gray-900 ">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        {summonerName}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-
-                        {totalMasteryScore.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        {totalChampionLevels}
-                    </td>
-                </tr>
+                <Table.Row key={summonerName} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                    <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                        {summonerName ?? "rusk i maskineriet.. 🤔"}
+                    </Table.Cell>
+                    <Table.Cell>
+                        {totalMasteryScore?.toString()?.replace(/\B(?=(\d{3})+(?!\d))/g, ",") ?? "rusk i maskineriet.. 🤔"}
+                    </Table.Cell>
+                    <Table.Cell>
+                        {totalChampionLevels ?? "rusk i maskineriet.. 🤔"}
+                    </Table.Cell>
+                </Table.Row>
             )
         })
     }
@@ -62,27 +62,27 @@ export default function HighScoreTable() {
 
 
     return (
-        <div className="text-white relative overflow-x-auto justify-center m-auto pt-20">
-            <b class="text-4xl">Kim e svettast?</b>
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">
-                            Summoner
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Total Mastery
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Total Levels
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {renderTableData()}
-                </tbody>
-            </table>
-        </div>
+        <Table hoverable={true}>
+            <Table.Head>
+                <Table.HeadCell>
+                    Summoner
+                </Table.HeadCell>
+                <Table.HeadCell>
+                    Total Mastery
+                </Table.HeadCell>
+                <Table.HeadCell>
+                    Total LVL
+                </Table.HeadCell>
+            </Table.Head>
+
+            <Table.Body className="divide-y">
+                {renderTableData()}
+            </Table.Body>
+        </Table>
+
+
+
+
 
     )
 }
