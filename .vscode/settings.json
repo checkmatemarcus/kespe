@@ -3,5 +3,6 @@
         "README.md",
         "Mastery feature! huge.",
         "App.js"
-    ]
+    ],
+    "conventionalCommits.emojiFormat": "emoji",
 }
