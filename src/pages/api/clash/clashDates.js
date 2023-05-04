@@ -1,24 +1,24 @@
 // NexJS endpoint for upcoming clash dates
-import { getClashDates } from "../riotAPI"
+import db from "../mongodb";
 
 export default async function handler(req, res) {
-    let response;
+  let response;
+  const client = await db();
+  try {
+    // Fetch raw data from Riot API
+    const rawClashDates = await client.getClashDates();
 
-    try {
-        // Fetch raw data from Riot API
-        const rawClashDates = await getClashDates()
+    // Get the total mastery score in raw data
+    const clashDates = rawClashDates.map((date) => {
+      return date;
+    });
 
-        // Get the total mastery score in raw data
-        const clashDates = rawClashDates.map((date) => {
-            return date
-        })
+    response = {
+      clashDates: clashDates,
+    };
+  } catch (error) {
+    response = { ...error.response.data, hint: `Riot API key expired ${process.env.API_KEY}` };
+  }
 
-        response = {
-            clashDates: clashDates
-        }
-    } catch (error) {
-        response = { ...error.response.data, hint: `Riot API key expired ${process.env.API_KEY}` }
-    }
-
-    res.status(200).json(response)
+  res.status(200).json(response);
 }
