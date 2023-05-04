@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] });
 export default function boobdude() {
     return (
         <>
-            <h1 class="font-extrabold flex justify-center p-6 text-6xl drop-shadow-2xl">Kespe.no</h1>
+            <p class="text-center max-w-xs flex justify-center" style={{ margin: "auto" }}>ja, kanskje du skulle ha tatt ein bug i før du ganka top lane?</p>
         </>
     )
 }

@@ -3,7 +3,6 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
 }
@@ -12,9 +11,9 @@
 
 
 html {
-  background: rgb(255,255,255);
-  background: -moz-linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(224,156,156,1) 100%);
-  background: -webkit-linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(224,156,156,1) 100%);
-  background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(224,156,156,1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff",endColorstr="#e09c9c",GradientType=1);
+  background: rgb(255, 255, 255);
+  background: -moz-linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(224, 156, 156, 1) 100%);
+  background: -webkit-linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(224, 156, 156, 1) 100%);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 1) 0%, rgba(224, 156, 156, 1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffffff", endColorstr="#e09c9c", GradientType=1);
 }
