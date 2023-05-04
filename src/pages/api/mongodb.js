@@ -1,18 +1,36 @@
-const { MongoClient } = require("mongodb");
+import { MongoClient } from "mongodb";
 import NodeCache from "node-cache";
 import { getSummonerMasteryBySummonerId, getSummonerInfoByName } from "./riotAPI";
-
 const cache = new NodeCache({
   stdTTL: 3600,
   checkperiod: 600,
 });
 
+const uri = "mongodb+srv://vercel-admin-user:sBhDli5BMb65Q2Q5@kespe.3isg2qr.mongodb.net/databasen?retryWrites=true&w=majority";
+const options = {};
+
+let client;
+let clientPromise;
+
+if (process.env.NODE_ENV === "development") {
+  // In development mode, use a global variable so that the value
+  // is preserved across module reloads caused by HMR (Hot Module Replacement).
+  let globalWithMongo = global;
+
+  if (!globalWithMongo._mongoClientPromise) {
+    client = new MongoClient(uri, options);
+    globalWithMongo._mongoClientPromise = client.connect();
+  }
+  clientPromise = globalWithMongo._mongoClientPromise;
+} else {
+  // In production mode, it's best to not use a global variable.
+  client = new MongoClient(uri, options);
+  clientPromise = client.connect();
+}
+
 export default async () => {
-  const uri = "mongodb+srv://vercel-admin-user:sBhDli5BMb65Q2Q5@kespe.3isg2qr.mongodb.net/databasen?retryWrites=true&w=majority";
-  const client = new MongoClient(uri);
-  await client.connect();
-  console.log("Connected to MongoDB");
-  const db = client.db("databasen");
+  const dbClient = await clientPromise;
+  const db = dbClient.db("databasen");
 
   return {
     getSummonerMasteryByName: async (name) => {
