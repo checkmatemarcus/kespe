@@ -1,12 +1,13 @@
-import { getSummonerMasteryByName } from '../riotAPI'
+import db from '../mongodb'
 
 export default async function handler(req, res) {
+  const client = await db()
   const input = req.query.summoner
   let response;
 
   try {
     // Fetch raw data from Riot API
-    const rawMasteryData = await getSummonerMasteryByName(input)
+    const rawMasteryData = await client.getSummonerMasteryByName(input)
 
     // Get the total mastery score in raw data
     const totalMasteryScore = rawMasteryData.reduce((accumulator, currentValue) => {

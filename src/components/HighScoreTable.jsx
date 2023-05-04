@@ -3,6 +3,7 @@ import { Table } from "flowbite-react";
 
 const sortByHighestScore = (scores) => {
     // sort the scores by highest totalMasteryScore
+    console.log(scores)
     scores.sort((a, b) => {
         return b.totalMasteryScore - a.totalMasteryScore;
     });
@@ -10,7 +11,8 @@ const sortByHighestScore = (scores) => {
     // Prefix the summonerName with the highest scores with emojis.
     const rankEmojis = ["🥇", "🥈", "🥉", "🤡", "💩"]
     scores.map((score, index) => {
-        score.summonerName = rankEmojis[index] + " " + score.summonerName;
+        score.summonerName = rankEmojis[index] + " " + score?.summonerName;
+
     });
 
     return scores
@@ -42,7 +44,7 @@ export default function HighScoreTable() {
     const renderTableData = () => {
         return scores.map((score, index) => {
 
-            const { summonerName, totalMasteryScore, totalChampionLevels } = score;
+            const { summonerName, totalMasteryScore, totalChampionLevels, profile } = score;
             return (
                 <Table.Row key={summonerName} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
@@ -53,6 +55,9 @@ export default function HighScoreTable() {
                     </Table.Cell>
                     <Table.Cell>
                         {totalChampionLevels ?? "rusk i maskineriet.. 🤔"}
+                    </Table.Cell>
+                    <Table.Cell>
+                        {profile ?? <a href="C:\Users\Marcu\repos\kespe\src\pages\bpk_boobdude.js">{String.fromCharCode(0x2192)}</a>}
                     </Table.Cell>
                 </Table.Row>
             )
@@ -73,7 +78,11 @@ export default function HighScoreTable() {
                 <Table.HeadCell>
                     Total LVL
                 </Table.HeadCell>
+                <Table.HeadCell>
+                    <a>profile</a>
+                </Table.HeadCell>
             </Table.Head>
+
 
             <Table.Body className="divide-y">
                 {renderTableData()}
