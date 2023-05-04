@@ -1,11 +1,7 @@
 import db from "../mongodb";
 
-let client;
-
 export default async function handler(req, res) {
-  if (!client) {
-    client = await db();
-  }
+  const client = await db();
   const input = req.query.summoner;
   let response;
 

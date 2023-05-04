@@ -7,11 +7,16 @@ const cache = new NodeCache({
   checkperiod: 600,
 });
 
+let client;
+
 export default async () => {
   const uri = "mongodb+srv://vercel-admin-user:sBhDli5BMb65Q2Q5@kespe.3isg2qr.mongodb.net/databasen?retryWrites=true&w=majority";
-  const client = new MongoClient(uri);
-  await client.connect();
-  console.log("Connected to MongoDB");
+  if (!client) {
+    client = new MongoClient(uri);
+    await client.connect();
+    console.log("Connected to MongoDB");
+  }
+
   const db = client.db("databasen");
 
   return {
