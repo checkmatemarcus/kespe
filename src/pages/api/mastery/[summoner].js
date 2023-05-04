@@ -25,7 +25,9 @@ export default async function handler(req, res) {
       totalChampionLevels: totalChampionLevels,
     };
   } catch (error) {
-    response = { ...error.response.data, hint: `Riot API key expired ${process.env.API_KEY}` };
+    console.error(error.stack);
+    return res.status(500).json({ error: error.message });
+    //response = { ...error.response.data, hint: `Riot API key expired ${process.env.API_KEY}` };
   }
 
   res.status(200).json(response);
