@@ -20,14 +20,17 @@ export default async () => {
 
       const cacheMastery = cache.get(`${name}Mastery`);
       if (cacheMastery) {
+        console.log("Got mastery from cache");
         return cacheMastery;
       }
 
       let summoner = cache.get(name);
       if (summoner) console.log("Got summoner from Cache");
 
-      if (!summoner) summoner = await collection.findOne({ name });
-      if (summoner) console.log("Got summoner from DB");
+      if (!summoner) {
+        summoner = await collection.findOne({ name });
+        if (summoner) console.log("got summoner from DB");
+      }
 
       if (!summoner) {
         summoner = await getSummonerInfoByName(name).catch((err) => {
@@ -39,8 +42,8 @@ export default async () => {
         });
         console.log("Got summoner from API");
         await collection.updateOne({ id: summoner.id }, { $set: summoner }, { upsert: true });
-        cache.set(name, summoner);
       }
+      cache.set(name, summoner);
 
       const masteryCol = db.collection("mastery");
       const dbM = await masteryCol.find({ summonerId: summoner.id }).toArray();
@@ -66,12 +69,11 @@ export default async () => {
         await masteryCol.bulkWrite(updates);
 
         console.log("Returning from API");
-
-        cache.set(`${name}Mastery`)
-
+        cache.set(`${name}Mastery`, mastery);
         return mastery;
       }
 
+      cache.set(`${name}Mastery`, dbM);
       console.log("Returning from DB");
 
       return dbM;
