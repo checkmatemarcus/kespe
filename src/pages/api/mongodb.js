@@ -106,6 +106,7 @@ export default async () => {
       const tournaments = await col.find({}).toArray();
       if (!tournaments.length) {
         const clashTournaments = await getClashDates();
+        // TODO: Insert these to database.
         cache.set("tournaments", clashTournaments);
         return clashTournaments;
       }
