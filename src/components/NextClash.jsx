@@ -44,7 +44,7 @@ export default function NextClash() {
         return `${duration.days} dager, ${duration.hours} timer og ${duration.minutes} minutter til neste kamp! 🏆 `
     }
 
-    if (isLoading) return <h1 class="flex m-auto pt-20 self-center">Loading...</h1>
+    if (isLoading) return <h1 className="flex m-auto pt-20 self-center">Loading...</h1>
     if (!nextClashDates[0]) return <h1>No data found</h1>
 
     return (

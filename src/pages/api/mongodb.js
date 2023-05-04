@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 import NodeCache from "node-cache";
-import { getSummonerMasteryBySummonerId, getSummonerInfoByName } from "./riotAPI";
+import { getSummonerMasteryBySummonerId, getSummonerInfoByName, getClashDates } from "./riotAPI";
 const cache = new NodeCache({
   stdTTL: 3600,
   checkperiod: 600,
@@ -92,9 +92,25 @@ export default async () => {
       }
 
       cache.set(`${name}Mastery`, dbM);
-      console.log("Returning from DB");
+      console.log("Returning mastery from DB");
 
       return dbM;
+    },
+    getClashDates: async () => {
+      const col = db.collection("clash-tournaments");
+      const cacheTournaments = cache.get("tournaments");
+      if (cacheTournaments) {
+        console.log("got tournaments from cache");
+        return cacheTournaments;
+      }
+      const tournaments = await col.find({}).toArray();
+      if (!tournaments.length) {
+        const clashTournaments = await getClashDates();
+        cache.set("tournaments", clashTournaments);
+        return clashTournaments;
+      }
+      cache.set("tournaments", tournaments);
+      return tournaments;
     },
   };
 };
