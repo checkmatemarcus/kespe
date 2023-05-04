@@ -1,61 +1,80 @@
+const { MongoClient } = require("mongodb");
+import NodeCache from "node-cache";
+import { getSummonerMasteryBySummonerId, getSummonerInfoByName } from "./riotAPI";
 
-const { MongoClient } = require('mongodb');
-import { getSummonerMasteryBySummonerId, getSummonerInfoByName } from './riotAPI'
+const cache = new NodeCache({
+  stdTTL: 3600,
+  checkperiod: 600,
+});
 
 export default async () => {
-    const uri = 'mongodb+srv://vercel-admin-user:sBhDli5BMb65Q2Q5@kespe.3isg2qr.mongodb.net/databasen?retryWrites=true&w=majority';
-    const client = new MongoClient(uri);
-    await client.connect();
-    console.log('Connected to MongoDB');
-    const db = client.db('databasen');
+  const uri = "mongodb+srv://vercel-admin-user:sBhDli5BMb65Q2Q5@kespe.3isg2qr.mongodb.net/databasen?retryWrites=true&w=majority";
+  const client = new MongoClient(uri);
+  await client.connect();
+  console.log("Connected to MongoDB");
+  const db = client.db("databasen");
 
-    return {
-        getSummonerMasteryByName: async (name) => {
-            const collection = db.collection('summoners');
-            let summoner = await collection.findOne({ name });
-            if (summoner) console.log("Got summoner from DB");
-            if (!summoner) {
-                summoner = await getSummonerInfoByName(name).catch(err => {
-                    console.error('error in getting summonerInfoByName')
-                    if (err.response) {
-                        console.error(err.response.data)
-                    }
-                    console.error(err.stack)
-                })
-                console.log("Got summoner from API")
-                await collection.updateOne({ id: summoner.id }, { $set: summoner }, { upsert: true })
-            }
+  return {
+    getSummonerMasteryByName: async (name) => {
+      const collection = db.collection("summoners");
 
-            const masteryCol = db.collection('mastery')
-            const dbM = await masteryCol.find({ summonerId: summoner.id }).toArray()
-            if (!dbM.length) {
-                const mastery = await getSummonerMasteryBySummonerId(summoner.id).catch(err => {
-                    console.error('error in getting getSummonerMasterByAccountId')
-                    if (err.response) {
-                        console.error(err.response.data)
-                    }
-                    console.error(err.stack)
-                })
+      const cacheMastery = cache.get(`${name}Mastery`);
+      if (cacheMastery) {
+        return cacheMastery;
+      }
 
-                const updates = mastery.map(el => {
-                    return {
-                        updateOne: {
-                            filter: { summonerId: summoner.id, championId: el.championId },
-                            update: { $set: el },
-                            upsert: true
-                        }
-                    }
-                })
+      let summoner = cache.get(name);
+      if (summoner) console.log("Got summoner from Cache");
 
-                await masteryCol.bulkWrite(updates)
+      if (!summoner) summoner = await collection.findOne({ name });
+      if (summoner) console.log("Got summoner from DB");
 
-                console.log("Returning from API")
-                return mastery;
-            }
+      if (!summoner) {
+        summoner = await getSummonerInfoByName(name).catch((err) => {
+          console.error("error in getting summonerInfoByName");
+          if (err.response) {
+            console.error(err.response.data);
+          }
+          console.error(err.stack);
+        });
+        console.log("Got summoner from API");
+        await collection.updateOne({ id: summoner.id }, { $set: summoner }, { upsert: true });
+        cache.set(name, summoner);
+      }
 
-            console.log("Returning from DB")
+      const masteryCol = db.collection("mastery");
+      const dbM = await masteryCol.find({ summonerId: summoner.id }).toArray();
+      if (!dbM.length) {
+        const mastery = await getSummonerMasteryBySummonerId(summoner.id).catch((err) => {
+          console.error("error in getting getSummonerMasterByAccountId");
+          if (err.response) {
+            console.error(err.response.data);
+          }
+          console.error(err.stack);
+        });
 
-            return dbM;
-        },
-    }
-}
+        const updates = mastery.map((el) => {
+          return {
+            updateOne: {
+              filter: { summonerId: summoner.id, championId: el.championId },
+              update: { $set: el },
+              upsert: true,
+            },
+          };
+        });
+
+        await masteryCol.bulkWrite(updates);
+
+        console.log("Returning from API");
+
+        cache.set(`${name}Mastery`)
+
+        return mastery;
+      }
+
+      console.log("Returning from DB");
+
+      return dbM;
+    },
+  };
+};
