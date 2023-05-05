@@ -34,8 +34,6 @@ export default async () => {
 
   return {
     getSummonerMasteryByName: async (name) => {
-      const collection = db.collection("summoners");
-
       const cacheMastery = cache.get(`${name}Mastery`);
       if (cacheMastery) {
         console.log("Got mastery from cache");
@@ -45,6 +43,7 @@ export default async () => {
       let summoner = cache.get(name);
       if (summoner) console.log("Got summoner from Cache");
 
+      const collection = db.collection("summoners");
       if (!summoner) {
         summoner = await collection.findOne({ name });
         if (summoner) console.log("got summoner from DB");
@@ -97,12 +96,12 @@ export default async () => {
       return dbM;
     },
     getClashDates: async () => {
-      const col = db.collection("clash-tournaments");
       const cacheTournaments = cache.get("tournaments");
       if (cacheTournaments) {
         console.log("got tournaments from cache");
         return cacheTournaments;
       }
+      const col = db.collection("clash-tournaments");
       const tournaments = await col.find({}).toArray();
       if (!tournaments.length) {
         const clashTournaments = await getClashDates();
