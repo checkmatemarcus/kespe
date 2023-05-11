@@ -37,7 +37,7 @@ export default function HighScoreTable() {
         })
     }, [])
 
-    if (isLoading) return <h1 class="flex m-auto pt-20 self-center">Loading...</h1>
+    if (isLoading) return <h1 class="flex justify-center items-center">Loading...</h1>
     if (!scores) return <h1>No data found</h1>
 
 
@@ -57,7 +57,7 @@ export default function HighScoreTable() {
                         {totalChampionLevels ?? "rusk i maskineriet.. 🤔"}
                     </Table.Cell>
                     <Table.Cell>
-                        {profile ?? <a href={'/' + url}>{String.fromCharCode(0x2192)}</a>}
+                        {profile ?? <a href={'/profile/' + url}>{String.fromCharCode(0x2192)}</a>}
                     </Table.Cell>
                 </Table.Row>
             )

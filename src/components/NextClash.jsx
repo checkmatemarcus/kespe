@@ -43,15 +43,15 @@ export default function NextClash() {
         if (duration.days === 0 && duration.hours === 0 && duration.minutes === 0) return "Clash er i gang! 🏆"
         return `${duration.days} dager, ${duration.hours} timer og ${duration.minutes} minutter til neste kamp! 🏆 `
     }
-
-    if (isLoading) return <h1 className="flex m-auto pt-20 self-center">Loading...</h1>
+    //add 1.5 seconds loading for each table
+    if (isLoading) return <h1 className="flex justify-center items-center">Loading...</h1>
     if (!nextClashDates[0]) return <h1>No data found</h1>
 
     return (
         <Card>
-            <b class="2xl">Neste Clash ⚔️</b>
-            <p>{countdown(nextClashDates[0]?.schedule[0]?.startTime)}</p>
-            <Button color="gray">
+            <b class="2xl text-red-500">Neste Clash ⚔️</b>
+            <p class="text-red-500">{countdown(nextClashDates[0]?.schedule[0]?.startTime)}</p>
+            <Button color="gray" href="https://support-leagueoflegends.riotgames.com/hc/en-us/articles/360000951548-Clash-FAQ">
                 <a href="https://support-leagueoflegends.riotgames.com/hc/en-us/articles/360000951548-Clash-FAQ">Clash FAQ</a>
             </Button>
             <Timeline>
